@@ -48,9 +48,8 @@
       "BABEL_ENV=production webpack --config=config/webpack.prod.js --env.NODE_ENV=production --profile --json > dist/stats.json",
     "build:dev": "webpack --config=config/webpack.dev.js",
     "build:server":
-      "BABEL_ENV=production webpack --config=config/webpack.server.js --env.NODE_ENV=production",
-    "dev":
-      "nodemon --watch src/server --watch config --inspect src/server/main.js",
+      "BABEL_ENV=production webpack --config=config/webpack.server.js --env.NODE_ENV=production --watch",
+    "dev": "nodemon --watch build --inspect build/server-bundle.js",
     "prod": "NODE_ENV=production node build/server-bundle.js",
     "heroku-postbuild": "npm run build"
   }

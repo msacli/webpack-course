@@ -130,13 +130,11 @@ module.exports = {
     "process.env": {
       NODE_ENV: (0, _stringify2.default)("development")
     }
-  })
-  // new HTMLWebpackPlugin({
-  //   template: "./src/index.ejs",
-  //   inject: true,
-  //   title: "Link's Journal"
-  // })
-  ]
+  }), new HTMLWebpackPlugin({
+    template: "./src/index.ejs",
+    inject: true,
+    title: "Link's Journal"
+  })]
 };
 ;
 
@@ -192,11 +190,9 @@ var _react = __webpack_require__("react");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _post = __webpack_require__("./data/post.md");
-
-var _post2 = _interopRequireDefault(_post);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var MarkdownData = __webpack_require__("./data/post.md");
 
 var _default = function (_React$Component) {
   (0, _inherits3.default)(_default, _React$Component);
@@ -220,11 +216,11 @@ var _default = function (_React$Component) {
         _react2.default.createElement(
           "h1",
           null,
-          _post2.default.title
+          MarkdownData.title
         ),
         _react2.default.createElement("div", {
           className: "content",
-          dangerouslySetInnerHTML: { __html: _post2.default.__content }
+          dangerouslySetInnerHTML: { __html: MarkdownData.__content }
         })
       );
     }
@@ -299,16 +295,16 @@ if (!isProd) {
   server.use(webpackDevMiddleware);
   server.use(webpackHotMiddlware);
   console.log("Middleware enabled");
+} else {
+  server.get("*", function (req, res) {
+    res.send("\n      <html>\n        <head>\n          <link href=\"main.css\" rel=\"stylesheet\" />\n        </head>\n        <body>\n          <div id=\"react-root\">\n            " + _server2.default.renderToString(_react2.default.createElement(_AppRoot2.default, null)) + "\n          </div>\n          <script src=\"vendor-bundle.js\"></script>\n          <script src=\"main-bundle.js\"></script>\n        </body>\n      </html>\n    ");
+  });
 }
 
 var expressStaticGzip = __webpack_require__("express-static-gzip");
 server.use(expressStaticGzip("dist", {
   enableBrotli: true
 }));
-
-server.get("*", function (req, res) {
-  res.send("\n    <html>\n      <head>\n        <link href=\"main.css\" rel=\"stylesheet\" />\n      </head>\n      <body>\n        <div id=\"react-root\">\n          " + _server2.default.renderToString(_react2.default.createElement(_AppRoot2.default, null)) + "\n        </div>\n        <script src=\"vendor-bundle.js\"></script>\n        <script src=\"main-bundle.js\"></script>\n      </body>\n    </html>\n  ");
-});
 
 var PORT = Object({"NODE_ENV":"production"}).PORT || 8080;
 server.listen(PORT, function () {

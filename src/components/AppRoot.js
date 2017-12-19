@@ -1,5 +1,5 @@
 import React from "react"
-import MarkdownData from "../../data/post.md"
+const MarkdownData = require("../../data/post.md")
 
 export default class extends React.Component {
   constructor(props) {
