@@ -1,30 +1,20 @@
 const path = require("path")
 const webpack = require("webpack")
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
-const HTMLWebpackPlugin = require("html-webpack-plugin")
-const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin")
-const UglifyJSPlugin = require("uglifyjs-webpack-plugin")
-const CompressionPlugin = require("compression-webpack-plugin")
-const BrotliPlugin = require("brotli-webpack-plugin")
+const nodeExternals = require("webpack-node-externals")
 
 module.exports = env => {
   return {
     entry: {
-      vendor: ["react", "lodash", "react-dom"],
-      main: ["./src/main.js"]
+      server: ["./src/server/main.js"]
     },
     output: {
       filename: "[name]-bundle.js",
-      path: path.resolve(__dirname, "../dist"),
-      publicPath: "/"
+      path: path.resolve(__dirname, "../build")
     },
-    devServer: {
-      contentBase: "dist",
-      overlay: true,
-      stats: {
-        colors: true
-      }
-    },
+    devServer: {},
+    target: "node",
+    externals: nodeExternals(),
     module: {
       rules: [
         {
@@ -58,33 +48,25 @@ module.exports = env => {
               }
             }
           ]
+        },
+        {
+          test: /\.md$/,
+          use: [
+            {
+              loader: "markdown-with-front-matter-loader"
+            }
+          ]
         }
       ]
     },
     plugins: [
       new ExtractTextPlugin("[name].css"),
-      new OptimizeCssAssetsPlugin({
-        assetNameRegExp: /\.css$/g,
-        cssProcessor: require("cssnano"),
-        cssProcessorOptions: { discardComments: { removeAll: true } },
-        canPrint: "true"
-      }),
       new webpack.DefinePlugin({
         "process.env": {
           NODE_ENV: JSON.stringify(env.NODE_ENV)
         }
       }),
-      new webpack.NamedModulesPlugin(),
-      // new HTMLWebpackPlugin({
-      //   template: "./src/index.ejs",
-      //   inject: true,
-      //   title: "Link's Journal"
-      // }),
-      new UglifyJSPlugin(),
-      new CompressionPlugin({
-        algorithm: "gzip"
-      }),
-      new BrotliPlugin()
+      new webpack.NamedModulesPlugin()
     ]
   }
 }

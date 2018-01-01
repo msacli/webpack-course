@@ -33,22 +33,23 @@
     "react-hot-loader": "*",
     "style-loader": "*",
     "url-loader": "*",
+    "watch-ignore-webpack-plugin": "^1.0.0",
     "webpack": "*",
     "webpack-bundle-analyzer": "^2.9.1",
     "webpack-dev-server": "*",
     "webpack-hot-middleware": "*",
-    "webpack-mild-compile": "*"
+    "webpack-mild-compile": "*",
+    "webpack-node-externals": "^1.6.0"
   },
   "scripts": {
     "start": "webpack-dev-server --config=config/webpack.dev.js",
-    "build":
-      "BABEL_ENV=production webpack --config=config/webpack.prod.js --env.NODE_ENV=production",
-    "stats":
-      "BABEL_ENV=production webpack --config=config/webpack.prod.js --env.NODE_ENV=production --profile --json > dist/stats.json",
+    "build": "BABEL_ENV=production webpack --config=config/webpack.prod.js --env.NODE_ENV=production",
+    "build:dev-server": "BABEL_ENV=development webpack --config=config/webpack.server.js --env.NODE_ENV=development --watch",
+    "build:server": "BABEL_ENV=production webpack --config=config/webpack.server.js --env.NODE_ENV=production --watch",
+    "stats": "BABEL_ENV=production webpack --config=config/webpack.prod.js --env.NODE_ENV=production --profile --json > dist/stats.json",
     "build:dev": "webpack --config=config/webpack.dev.js",
-    "dev":
-      "nodemon --watch src/server --watch config --inspect src/server/main.js",
-    "prod": "NODE_ENV=production node src/server/main.js",
+    "dev": "nodemon --watch build --watch config --inspect build/server-bundle.js",
+    "prod": "NODE_ENV=production node build/server-bundle.js",
     "heroku-postbuild": "npm run build"
   }
 }

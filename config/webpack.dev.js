@@ -20,6 +20,7 @@ module.exports = {
   },
   devServer: {
     contentBase: "dist",
+    hot: true,
     overlay: true,
     stats: {
       colors: true
@@ -74,11 +75,11 @@ module.exports = {
       "process.env": {
         NODE_ENV: JSON.stringify("development")
       }
+    }),
+    new HTMLWebpackPlugin({
+      template: "./src/index.ejs",
+      inject: true,
+      title: "Link's Journal"
     })
-    // new HTMLWebpackPlugin({
-    //   template: "./src/index.ejs",
-    //   inject: true,
-    //   title: "Link's Journal"
-    // })
   ]
 }
